@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>門市資料管理系統</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #3498db;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --border-color: #bdc3c7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 8px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 992px) {
+            .main-content {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            background-color: var(--light-color);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            margin: 0;
+            color: var(--dark-color);
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-title i {
+            margin-right: 8px;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* 表單樣式 */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.15s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .btn {
+            display: inline-block;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 4px;
+            transition: all 0.15s ease-in-out;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .btn-success {
+            color: #fff;
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+            border-color: #27ae60;
+        }
+
+        .btn-danger {
+            color: #fff;
+            background-color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+            border-color: #c0392b;
+        }
+
+        .btn-warning {
+            color: #fff;
+            background-color: var(--warning-color);
+            border-color: var(--warning-color);
+        }
+
+        .btn-warning:hover {
+            background-color: #e67e22;
+            border-color: #e67e22;
+        }
+
+        .btn-info {
+            color: #fff;
+            background-color: var(--info-color);
+            border-color: var(--info-color);
+        }
+
+        .btn-info:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .btn-secondary {
+            color: #fff;
+            background-color: #95a5a6;
+            border-color: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+            border-color: #7f8c8d;
+        }
+
+        .btn-sm {
+            width: 80%;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-icon {
+            margin-right: 5px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+
+        /* 表格樣式 */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table th {
+            background-color: var(--light-color);
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .table tr:hover {
+            background-color: rgba(236, 240, 241, 0.5);
+        }
+
+        .actions {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* 狀態提示 */
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        /* 自訂樣式 */
+        .hidden {
+            display: none;
+        }
+
+        .fade {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .store-count, .staff-badge {
+            background-color: var(--success-color);
+            color: white;
+            border-radius: 50%;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            margin-left: 4px;
+        }
+
+        .staff-badge {
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .search-bar {
+            display: flex;
+            margin-bottom: 1rem;
+            gap: 10px;
+        }
+
+        .search-bar .form-control {
+            flex-grow: 1;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 2rem 0;
+            color: #7f8c8d;
+        }
+
+        .no-data i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .truncate {
+            /* white-space: nowrap; */
+            overflow: hidden;
+            /* text-overflow: ellipsis; */
+            max-width: 150px;
+        }
+
+        /* 業務人員資料區域 */
+        .staff-section {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .staff-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .staff-title {
+            font-weight: 600;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .staff-title i {
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+
+        .staff-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .staff-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .staff-card {
+            background-color: white;
+            border-radius: 6px;
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+            border-left: 3px solid var(--info-color);
+            position: relative;
+        }
+
+        .staff-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .staff-name {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .staff-name i {
+            color: var(--info-color);
+            margin-right: 5px;
+        }
+
+        .staff-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .staff-info p {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .staff-info i {
+            width: 20px;
+            color: #7f8c8d;
+            margin-right: 5px;
+        }
+
+        .qr-code-icon {
+            color: var(--info-color);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .qr-code-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .staff-card .card-actions {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        /* 摺疊效果 */
+        .collapsed {
+            display: none;
+        }
+
+        /* 標籤頁樣式 */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-weight: 600;
+            color: #7f8c8d;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab:hover:not(.active) {
+            color: #2c3e50;
+            border-bottom-color: #bdc3c7;
+        }
+
+        /* 模態對話框 */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-backdrop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-dialog {
+            background-color: white;
+            border-radius: 8px;
+            max-width: 90%;
+            width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .modal-backdrop.show .modal-dialog {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #95a5a6;
+            transition: color 0.2s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--danger-color);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* QR 碼樣式 */
+        .qr-code-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .qr-code-container {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .qr-code-img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .qr-code-info {
+            margin-top: 1rem;
+            color: var(--dark-color);
+        }
+
+        .qr-code-url {
+            word-break: break-all;
+            background-color: var(--light-color);
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        /* 行動裝置優化 */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo {
+                margin-bottom: 1rem;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .staff-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-dialog {
+                width: 95%;
+            }
+            
+            .staff-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .staff-controls {
+                margin-top: 10px;
+                width: 100%;
+            }
+            
+            .staff-controls .btn {
+                flex: 1;
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 頁面頂部 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-store"></i>
+                居家先生門市管理
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要內容區 -->
+    <div class="container">
+        <div class="main-content">
+            <!-- 左側表單卡片 -->
+            <div id="formContainer">
+                <!-- 門市資料表單卡片 -->
+                <div class="card" id="storeFormCard">
+                    <div class="card-header">
+                        <h2 class="card-title" id="formTitle">
+                            <i class="fas fa-plus-circle"></i>
+                            新增門市
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <!-- 表單訊息提示區 -->
+                        <div id="formAlert" class="alert hidden"></div>
+                        
+                        <!-- 門市資料表單 -->
+                        <form id="storeForm">
+                            <input type="hidden" id="storeId">
+                            
+                            <div class="form-group">
+                                <label for="storeName">門市名稱 <span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="storeName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="storeAddress">地址 <span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="storeAddress" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="storePhone">電話 <span style="color:red">*</span></label>
+                                <input type="tel" class="form-control" id="storePhone" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="storeTaxId">統編 <span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="storeTaxId" required maxlength="8" pattern="[0-9]{8}">
+                                <small style="color:#7f8c8d">請輸入8位數字</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="storeUrl">漸強 URL <span style="color:red">*</span></label>
+                                <input type="url" class="form-control" id="storeUrl" required>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success" id="saveStoreBtn">
+                                    <i class="fas fa-save btn-icon"></i>儲存門市
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="cancelStoreBtn">
+                                    <i class="fas fa-times btn-icon"></i>取消
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- 業務人員資料表單卡片 -->
+                <div class="card hidden" id="staffFormCard">
+                    <div class="card-header">
+                        <h2 class="card-title" id="staffFormTitle">
+                            <i class="fas fa-user-plus"></i>
+                            新增業務人員
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <!-- 表單訊息提示區 -->
+                        <div id="staffFormAlert" class="alert hidden"></div>
+                        
+                        <!-- 業務人員資料表單 -->
+                        <form id="staffForm">
+                            <input type="hidden" id="staffId">
+                            <input type="hidden" id="staffStoreId">
+                            
+                            <div class="form-group">
+                                <label for="staffName">姓名 <span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="staffName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="staffPosition">職位 <span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="staffPosition" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="staffEmail">電子郵件 <span style="color:red">*</span></label>
+                                <input type="email" class="form-control" id="staffEmail" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="staffPhone">聯絡電話 <span style="color:red">*</span></label>
+                                <input type="tel" class="form-control" id="staffPhone" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="staffQrUrl">漸強 URL (用於 QR Code) <span style="color:red">*</span></label>
+                                <input type="url" class="form-control" id="staffQrUrl" required>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success" id="saveStaffBtn">
+                                    <i class="fas fa-save btn-icon"></i>儲存業務人員
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="cancelStaffBtn">
+                                    <i class="fas fa-times btn-icon"></i>取消
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 門市列表卡片 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-list"></i>
+                        門市列表
+                        <span class="store-count" id="storeCount">0</span>
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <!-- 列表訊息提示區 -->
+                    <div id="listAlert" class="alert hidden"></div>
+                    
+                    <!-- 搜尋欄 -->
+                    <div class="search-bar">
+                        <input type="text" class="form-control" id="searchInput" placeholder="搜尋門市名稱、地址、業務人員...">
+                        <button class="btn btn-primary" id="searchBtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- 門市資料表格 -->
+                    <div class="table-responsive">
+                        <table class="table" id="storeTable">
+                            <thead>
+                                <tr>
+                                    <th>門市名稱</th>
+                                    <th>地址</th>
+                                    <th>電話</th>
+                                    <th>統編</th>
+                                    <th>漸強 URL</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="storeTableBody">
+                                <!-- 表格資料將由JavaScript動態載入 -->
+                                <tr>
+                                    <td colspan="6" class="no-data">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        正在載入門市資料...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR 碼模態對話框 -->
+    <div class="modal-backdrop" id="qrCodeModal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title">業務 Line Invite Login QR Code</h3>
+                <button class="modal-close" id="closeQrModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="qr-code-section">
+                    <div class="qr-code-container">
+                        <div id="qrCodeImage"></div>
+                    </div>
+                    <div class="qr-code-info">
+                        <p><strong id="qrCodeStaffName">業務員姓名</strong></p>
+                        <p><strong>漸強 URL:</strong></p>
+                        <div class="qr-code-url" id="qrCodeUrl">https://example.com/invite/12345</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeQrModalBtn">關閉</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模擬存儲的門市資料
+        let stores = [
+            {
+                id: "1001",
+                name: "台北信義門市",
+                address: "台北市信義區松高路68號",
+                phone: "02-2723-1111",
+                taxId: "12345678",
+                url: "https://example.com/taipei-xinyi",
+                staff: [
+                    {
+                        id: "s1001",
+                        name: "王小明",
+                        email: "wang@example.com",
+                        phone: "0912-345-678",
+                        position: "資深業務",
+                        qrCodeUrl: "https://example.com/invite/wang"
+                    },
+                    {
+                        id: "s1002",
+                        name: "李美玲",
+                        email: "lee@example.com",
+                        phone: "0923-456-789",
+                        position: "業務主任",
+                        qrCodeUrl: "https://example.com/invite/lee"
+                    },
+                    {
+                        id: "s1003",
+                        name: "張大方",
+                        email: "chang@example.com",
+                        phone: "0934-567-890",
+                        position: "業務經理",
+                        qrCodeUrl: "https://example.com/invite/chang"
+                    }
+                ]
+            },
+            {
+                id: "1002",
+                name: "台北忠孝門市",
+                address: "台北市大安區忠孝東路四段169號",
+                phone: "02-2721-2222",
+                taxId: "23456789",
+                url: "https://example.com/taipei-zhongxiao",
+                staff: [
+                    {
+                        id: "s2001",
+                        name: "陳志明",
+                        email: "chen@example.com",
+                        phone: "0912-123-456",
+                        position: "業務專員",
+                        qrCodeUrl: "https://example.com/invite/chen"
+                    },
+                    {
+                        id: "s2002",
+                        name: "林美華",
+                        email: "lin@example.com",
+                        phone: "0923-234-567",
+                        position: "高級業務",
+                        qrCodeUrl: "https://example.com/invite/lin"
+                    }
+                ]
+            },
+            {
+                id: "1003",
+                name: "新北板橋門市",
+                address: "新北市板橋區縣民大道二段7號",
+                phone: "02-2956-3333",
+                taxId: "34567890",
+                url: "https://example.com/banqiao",
+                staff: [
+                    {
+                        id: "s3001",
+                        name: "黃小芳",
+                        email: "huang@example.com",
+                        phone: "0934-345-678",
+                        position: "業務主任",
+                        qrCodeUrl: "https://example.com/invite/huang"
+                    }
+                ]
+            },
+            {
+                id: "1004",
+                name: "台中文心門市",
+                address: "台中市南屯區文心路一段378號",
+                phone: "04-2326-4444",
+                taxId: "45678901",
+                url: "https://example.com/taichung-wenxin",
+                staff: [
+                    {
+                        id: "s4001",
+                        name: "吳建德",
+                        email: "wu@example.com",
+                        phone: "0945-456-789",
+                        position: "業務經理",
+                        qrCodeUrl: "https://example.com/invite/wu"
+                    },
+                    {
+                        id: "s4002",
+                        name: "趙雅婷",
+                        email: "chao@example.com",
+                        phone: "0956-567-890",
+                        position: "業務專員",
+                        qrCodeUrl: "https://example.com/invite/chao"
+                    },
+                    {
+                        id: "s4003",
+                        name: "許大同",
+                        email: "hsu@example.com",
+                        phone: "0967-678-901",
+                        position: "業務專員",
+                        qrCodeUrl: "https://example.com/invite/hsu"
+                    },
+                    {
+                        id: "s4004",
+                        name: "周小琳",
+                        email: "chou@example.com",
+                        phone: "0978-789-012",
+                        position: "業務專員",
+                        qrCodeUrl: "https://example.com/invite/chou"
+                    }
+                ]
+            },
+            {
+                id: "1005",
+                name: "高雄夢時代門市",
+                address: "高雄市前鎮區中華五路789號",
+                phone: "07-5335-5555",
+                taxId: "56789012",
+                url: "https://example.com/kaohsiung-dream",
+                staff: [
+                    {
+                        id: "s5001",
+                        name: "鄭光明",
+                        email: "cheng@example.com",
+                        phone: "0989-890-123",
+                        position: "資深業務",
+                        qrCodeUrl: "https://example.com/invite/cheng"
+                    },
+                    {
+                        id: "s5002",
+                        name: "楊雅惠",
+                        email: "yang@example.com",
+                        phone: "0990-901-234",
+                        position: "業務專員",
+                        qrCodeUrl: "https://example.com/invite/yang"
+                    }
+                ]
+            }
+        ];
+
+        // DOM 元素
+        const storeForm = document.getElementById('storeForm');
+        const storeTableBody = document.getElementById('storeTableBody');
+        const formTitle = document.getElementById('formTitle');
+        const formAlert = document.getElementById('formAlert');
+        const listAlert = document.getElementById('listAlert');
+        const storeCount = document.getElementById('storeCount');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const cancelStoreBtn = document.getElementById('cancelStoreBtn');
+        const qrCodeModal = document.getElementById('qrCodeModal');
+        const closeQrModal = document.getElementById('closeQrModal');
+        const closeQrModalBtn = document.getElementById('closeQrModalBtn');
+        const qrCodeImage = document.getElementById('qrCodeImage');
+        const qrCodeStaffName = document.getElementById('qrCodeStaffName');
+        const qrCodeUrl = document.getElementById('qrCodeUrl');
+        
+        // 業務表單元素
+        const storeFormCard = document.getElementById('storeFormCard');
+        const staffFormCard = document.getElementById('staffFormCard');
+        const staffForm = document.getElementById('staffForm');
+        const staffFormTitle = document.getElementById('staffFormTitle');
+        const staffFormAlert = document.getElementById('staffFormAlert');
+        const cancelStaffBtn = document.getElementById('cancelStaffBtn');
+        
+        // 狀態變數
+        let currentStoreId = null;
+        let currentStaffId = null;
+        let filteredStores = [...stores];
+        let expandedStoreId = null;
+
+        // 頁面載入時執行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化門市列表
+            renderStoreTable(stores);
+            updateStoreCount();
+            
+            // 綁定門市表單提交事件
+            storeForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveStore();
+            });
+            
+            // 綁定業務表單提交事件
+            staffForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveStaff();
+            });
+            
+            // 綁定取消按鈕事件
+            cancelStoreBtn.addEventListener('click', function() {
+                resetStoreForm();
+                showFormMessage('資料已清除', 'info');
+            });
+            
+            cancelStaffBtn.addEventListener('click', function() {
+                switchToStoreForm();
+                showFormMessage('資料已清除', 'info');
+            });
+            
+            // 綁定搜尋事件
+            searchBtn.addEventListener('click', function() {
+                searchStores();
+            });
+            
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    searchStores();
+                }
+            });
+            
+            // 綁定 QR 碼對話框關閉事件
+            closeQrModal.addEventListener('click', function() {
+                qrCodeModal.classList.remove('show');
+            });
+            
+            closeQrModalBtn.addEventListener('click', function() {
+                qrCodeModal.classList.remove('show');
+            });
+            
+            // 點擊對話框外部關閉
+            qrCodeModal.addEventListener('click', function(e) {
+                if (e.target === qrCodeModal) {
+                    qrCodeModal.classList.remove('show');
+                }
+            });
+        });
+
+        // 切換到業務表單
+        function switchToStaffForm(storeId, staffId = null) {
+            storeFormCard.classList.add('hidden');
+            staffFormCard.classList.remove('hidden');
+            
+            // 重置業務表單
+            staffForm.reset();
+            document.getElementById('staffStoreId').value = storeId;
+            
+            // 如果有指定業務ID，則填充表單進行編輯
+            if (staffId) {
+                const store = stores.find(s => s.id === storeId);
+                const staff = store.staff.find(s => s.id === staffId);
+                
+                if (staff) {
+                    document.getElementById('staffId').value = staff.id;
+                    document.getElementById('staffName').value = staff.name;
+                    document.getElementById('staffPosition').value = staff.position;
+                    document.getElementById('staffEmail').value = staff.email;
+                    document.getElementById('staffPhone').value = staff.phone;
+                    document.getElementById('staffQrUrl').value = staff.qrCodeUrl;
+                    
+                    staffFormTitle.innerHTML = `<i class="fas fa-user-edit"></i> 編輯業務人員`;
+                    currentStaffId = staff.id;
+                }
+            } else {
+                staffFormTitle.innerHTML = `<i class="fas fa-user-plus"></i> 新增業務人員`;
+                currentStaffId = null;
+            }
+        }
+
+        // 切換回門市表單
+        function switchToStoreForm() {
+            staffFormCard.classList.add('hidden');
+            storeFormCard.classList.remove('hidden');
+            currentStaffId = null;
+        }
+
+        // 渲染門市資料表格
+        function renderStoreTable(storesData) {
+            if (storesData.length === 0) {
+                storeTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="no-data">
+                            <i class="fas fa-folder-open"></i>
+                            沒有找到門市資料
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            storeTableBody.innerHTML = '';
+            
+            storesData.forEach(store => {
+                // 建立主行
+                const row = document.createElement('tr');
+                row.setAttribute('data-store-id', store.id);
+                row.innerHTML = `
+                    <td>${store.name} <span class="staff-badge">${store.staff ? store.staff.length : 0}</span></td>
+                    <td class="truncate" title="${store.address}">${store.address}</td>
+                    <td>${store.phone}</td>
+                    <td>${store.taxId}</td>
+                    <td class="truncate" title="${store.url}">${store.url}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn btn-primary btn-sm edit-btn" data-id="${store.id}">
+                                <i class="fas fa-edit"></i> 編輯
+                            </button>
+                            <button class="btn btn-info btn-sm view-staff-btn" data-id="${store.id}">
+                                <i class="fas fa-users"></i> 查看業務
+                            </button>
+                            <button class="btn btn-danger btn-sm delete-btn" data-id="${store.id}">
+                                <i class="fas fa-trash"></i> 刪除
+                            </button>
+                        </div>
+                    </td>
+                `;
+                storeTableBody.appendChild(row);
+                
+                // 建立業務資料行
+                const staffRow = document.createElement('tr');
+                staffRow.classList.add('staff-container');
+                staffRow.setAttribute('data-store-id', store.id);
+                staffRow.style.display = 'none';
+                
+                const staffCell = document.createElement('td');
+                staffCell.colSpan = 6;
+                
+                let staffHtml = `
+                    <div class="staff-section">
+                        <div class="staff-header">
+                            <div class="staff-title">
+                                <i class="fas fa-user-tie"></i>
+                                ${store.name}的業務人員
+                            </div>
+                            <div class="staff-controls">
+                                <button class="btn btn-success btn-sm add-staff-btn" data-store-id="${store.id}">
+                                    <i class="fas fa-user-plus"></i> 新增業務
+                                </button>
+                                <button class="btn btn-secondary btn-sm close-staff-btn" data-store-id="${store.id}">
+                                    <i class="fas fa-times"></i> 關閉
+                                </button>
+                            </div>
+                        </div>
+                `;
+                
+                if (!store.staff || store.staff.length === 0) {
+                    staffHtml += `
+                        <div class="no-data">
+                            <i class="fas fa-user-slash"></i>
+                            尚未新增業務人員
+                        </div>
+                    `;
+                } else {
+                    staffHtml += '<div class="staff-details">';
+                    
+                    store.staff.forEach(staff => {
+                        staffHtml += `
+                            <div class="staff-card">
+                                <div class="staff-name">
+                                    <span><i class="fas fa-user"></i> ${staff.name}</span>
+                                    <i class="fas fa-qrcode qr-code-icon" data-staff-id="${staff.id}" data-staff-name="${staff.name}" data-qr-code-url="${staff.qrCodeUrl}" title="顯示 QR Code"></i>
+                                </div>
+                                <div class="staff-info">
+                                    <p><i class="fas fa-briefcase"></i> ${staff.position}</p>
+                                    <p><i class="fas fa-envelope"></i> ${staff.email}</p>
+                                    <p><i class="fas fa-phone"></i> ${staff.phone}</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="btn btn-primary btn-sm edit-staff-btn" data-store-id="${store.id}" data-staff-id="${staff.id}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-staff-btn" data-store-id="${store.id}" data-staff-id="${staff.id}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    staffHtml += '</div>';
+                }
+                
+                staffHtml += '</div>';
+                staffCell.innerHTML = staffHtml;
+                staffRow.appendChild(staffCell);
+                storeTableBody.appendChild(staffRow);
+            });
+            
+            // 綁定門市相關按鈕事件
+            bindStoreButtonEvents();
+            
+            // 綁定業務相關按鈕事件
+            bindStaffButtonEvents();
+        }
+
+        // 綁定門市按鈕事件
+        function bindStoreButtonEvents() {
+            // 綁定編輯按鈕事件
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const storeId = this.getAttribute('data-id');
+                    editStore(storeId);
+                });
+            });
+            
+            // 綁定查看業務按鈕事件
+            document.querySelectorAll('.view-staff-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const storeId = this.getAttribute('data-id');
+                    toggleStaffView(storeId);
+                });
+            });
+            
+            // 綁定關閉業務區域按鈕事件
+            document.querySelectorAll('.close-staff-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const storeId = this.getAttribute('data-store-id');
+                    toggleStaffView(storeId);
+                });
+            });
+            
+            // 綁定刪除按鈕事件
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const storeId = this.getAttribute('data-id');
+                    deleteStore(storeId);
+                });
+            });
+        }
+
+        // 綁定業務按鈕事件
+        function bindStaffButtonEvents() {
+            // 綁定新增業務按鈕事件
+            document.querySelectorAll('.add-staff-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const storeId = this.getAttribute('data-store-id');
+                    switchToStaffForm(storeId);
+                });
+            });
+            
+            // 綁定編輯業務按鈕事件
+            document.querySelectorAll('.edit-staff-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const storeId = this.getAttribute('data-store-id');
+                    const staffId = this.getAttribute('data-staff-id');
+                    switchToStaffForm(storeId, staffId);
+                });
+            });
+            
+            // 綁定刪除業務按鈕事件
+            document.querySelectorAll('.delete-staff-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const storeId = this.getAttribute('data-store-id');
+                    const staffId = this.getAttribute('data-staff-id');
+                    deleteStaff(storeId, staffId);
+                });
+            });
+            
+            // 綁定 QR 碼圖示事件
+            document.querySelectorAll('.qr-code-icon').forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const staffId = this.getAttribute('data-staff-id');
+                    const staffName = this.getAttribute('data-staff-name');
+                    const qrUrl = this.getAttribute('data-qr-code-url');
+                    showQrCode(staffId, staffName, qrUrl);
+                });
+            });
+        }
+
+        // 顯示/隱藏業務資料區域
+        function toggleStaffView(storeId) {
+            const staffContainer = document.querySelector(`.staff-container[data-store-id="${storeId}"]`);
+            
+            if (staffContainer.style.display === 'none') {
+                // 如果先前有展開的門市，則先收起
+                if (expandedStoreId && expandedStoreId !== storeId) {
+                    const prevStaffContainer = document.querySelector(`.staff-container[data-store-id="${expandedStoreId}"]`);
+                    if (prevStaffContainer) {
+                        prevStaffContainer.style.display = 'none';
+                    }
+                }
+                
+                staffContainer.style.display = '';
+                expandedStoreId = storeId;
+            } else {
+                staffContainer.style.display = 'none';
+                expandedStoreId = null;
+            }
+        }
+
+        // 顯示 QR 碼模態對話框
+        function showQrCode(staffId, staffName, qrUrl) {
+            // 設置 QR 碼資訊
+            qrCodeStaffName.textContent = staffName;
+            qrCodeUrl.textContent = qrUrl;
+            
+            // 生成 QR 碼圖片 (使用 placeholder 圖片替代)
+            qrCodeImage.innerHTML = `
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}" 
+                     alt="QR Code for ${staffName}" 
+                     class="qr-code-img">
+            `;
+            
+            // 顯示模態對話框
+            qrCodeModal.classList.add('show');
+        }
+
+        // 更新門市數量顯示
+        function updateStoreCount() {
+            storeCount.textContent = stores.length;
+        }
+
+        // 儲存門市資料（新增或更新）
+        function saveStore() {
+            // 獲取表單資料
+            const storeData = {
+                name: document.getElementById('storeName').value,
+                address: document.getElementById('storeAddress').value,
+                phone: document.getElementById('storePhone').value,
+                taxId: document.getElementById('storeTaxId').value,
+                url: document.getElementById('storeUrl').value
+            };
+            
+            // 驗證統編格式
+            if (!/^\d{8}$/.test(storeData.taxId)) {
+                showFormMessage('統編必須是8位數字', 'danger');
+                return;
+            }
+            
+            // 更新現有門市
+            if (currentStoreId) {
+                const index = stores.findIndex(store => store.id === currentStoreId);
+                
+                if (index !== -1) {
+                    // 保留原有業務資料
+                    const existingStaff = stores[index].staff || [];
+                    
+                    stores[index] = {
+                        ...stores[index],
+                        ...storeData,
+                        staff: existingStaff
+                    };
+                    
+                    showListMessage(`門市「${storeData.name}」已更新`, 'success');
+                }
+            } 
+            // 新增門市
+            else {
+                const newStore = {
+                    id: Date.now().toString(),
+                    ...storeData,
+                    staff: [] // 初始化空的業務人員列表
+                };
+                
+                stores.push(newStore);
+                showListMessage(`門市「${storeData.name}」已新增`, 'success');
+            }
+            
+            // 更新表格和計數
+            renderStoreTable(stores);
+            updateStoreCount();
+            resetStoreForm();
+            
+            // 更新篩選結果
+            filteredStores = [...stores];
+            searchStores();
+        }
+
+        // 儲存業務人員資料（新增或更新）
+        function saveStaff() {
+            // 獲取表單資料
+            const storeId = document.getElementById('staffStoreId').value;
+            const staffData = {
+                name: document.getElementById('staffName').value,
+                position: document.getElementById('staffPosition').value,
+                email: document.getElementById('staffEmail').value,
+                phone: document.getElementById('staffPhone').value,
+                qrCodeUrl: document.getElementById('staffQrUrl').value
+            };
+            
+            const storeIndex = stores.findIndex(store => store.id === storeId);
+            
+            if (storeIndex !== -1) {
+                // 確保 staff 陣列存在
+                if (!stores[storeIndex].staff) {
+                    stores[storeIndex].staff = [];
+                }
+                
+                // 更新現有業務
+                if (currentStaffId) {
+                    const staffIndex = stores[storeIndex].staff.findIndex(s => s.id === currentStaffId);
+                    
+                    if (staffIndex !== -1) {
+                        stores[storeIndex].staff[staffIndex] = {
+                            ...stores[storeIndex].staff[staffIndex],
+                            ...staffData
+                        };
+                        
+                        showStaffFormMessage(`業務人員「${staffData.name}」已更新`, 'success');
+                    }
+                } 
+                // 新增業務
+                else {
+                    const newStaff = {
+                        id: 's' + Date.now().toString(),
+                        ...staffData
+                    };
+                    
+                    stores[storeIndex].staff.push(newStaff);
+                    showStaffFormMessage(`業務人員「${staffData.name}」已新增`, 'success');
+                }
+                
+                // 更新表格
+                renderStoreTable(stores);
+                
+                // 如果原來的門市是展開的，保持展開狀態
+                if (expandedStoreId === storeId) {
+                    toggleStaffView(storeId);
+                    toggleStaffView(storeId);
+                }
+                
+                // 返回門市表單
+                setTimeout(() => {
+                    switchToStoreForm();
+                }, 1500);
+            } else {
+                showStaffFormMessage('找不到對應的門市', 'danger');
+            }
+        }
+
+        // 編輯門市
+        function editStore(storeId) {
+            const store = stores.find(s => s.id === storeId);
+            
+            if (store) {
+                // 切換到門市表單（如果正在編輯業務）
+                switchToStoreForm();
+                
+                // 設置表單標題
+                formTitle.innerHTML = `<i class="fas fa-edit"></i> 編輯門市`;
+                
+                // 填充表單資料
+                document.getElementById('storeId').value = store.id;
+                document.getElementById('storeName').value = store.name;
+                document.getElementById('storeAddress').value = store.address;
+                document.getElementById('storePhone').value = store.phone;
+                document.getElementById('storeTaxId').value = store.taxId;
+                document.getElementById('storeUrl').value = store.url;
+                
+                // 更新狀態
+                currentStoreId = store.id;
+                
+                // 滾動到表單位置
+                document.querySelector('.card').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // 刪除門市
+        function deleteStore(storeId) {
+            if (confirm('確定要刪除此門市嗎？此操作會一併刪除該門市下的所有業務資料，且無法復原。')) {
+                const storeToDelete = stores.find(s => s.id === storeId);
+                const storeName = storeToDelete ? storeToDelete.name : '';
+                
+                // 從陣列中刪除
+                stores = stores.filter(store => store.id !== storeId);
+                
+                // 更新篩選結果
+                filteredStores = filteredStores.filter(store => store.id !== storeId);
+                
+                // 更新表格和計數
+                renderStoreTable(filteredStores);
+                updateStoreCount();
+                
+                // 如果正在編輯被刪除的門市，重置表單
+                if (currentStoreId === storeId) {
+                    resetStoreForm();
+                    switchToStoreForm();
+                }
+                
+                showListMessage(`門市「${storeName}」已刪除`, 'info');
+            }
+        }
+
+        // 刪除業務人員
+        function deleteStaff(storeId, staffId) {
+            const storeIndex = stores.findIndex(store => store.id === storeId);
+            
+            if (storeIndex !== -1 && stores[storeIndex].staff) {
+                const staff = stores[storeIndex].staff.find(s => s.id === staffId);
+                const staffName = staff ? staff.name : '';
+                
+                if (confirm(`確定要刪除業務人員「${staffName}」嗎？此操作無法復原。`)) {
+                    // 從陣列中刪除
+                    stores[storeIndex].staff = stores[storeIndex].staff.filter(s => s.id !== staffId);
+                    
+                    // 更新表格
+                    renderStoreTable(stores);
+                    
+                    // 如果原來的門市是展開的，保持展開狀態
+                    if (expandedStoreId === storeId) {
+                        toggleStaffView(storeId);
+                        toggleStaffView(storeId);
+                    }
+                    
+                    // 如果正在編輯被刪除的業務，返回門市表單
+                    if (currentStaffId === staffId) {
+                        switchToStoreForm();
+                    }
+                    
+                    showListMessage(`業務人員「${staffName}」已刪除`, 'info');
+                }
+            }
+        }
+
+        // 重置門市表單
+        function resetStoreForm() {
+            storeForm.reset();
+            document.getElementById('storeId').value = '';
+            formTitle.innerHTML = `<i class="fas fa-plus-circle"></i> 新增門市`;
+            currentStoreId = null;
+        }
+
+        // 搜尋門市
+        function searchStores() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                filteredStores = [...stores];
+                renderStoreTable(stores);
+                return;
+            }
+            
+            filteredStores = stores.filter(store => 
+                store.name.toLowerCase().includes(searchTerm) || 
+                store.address.toLowerCase().includes(searchTerm) ||
+                store.phone.toLowerCase().includes(searchTerm) ||
+                store.taxId.toLowerCase().includes(searchTerm) ||
+                // 搜尋業務人員
+                (store.staff && store.staff.some(staff => 
+                    staff.name.toLowerCase().includes(searchTerm) ||
+                    staff.email.toLowerCase().includes(searchTerm) ||
+                    staff.phone.toLowerCase().includes(searchTerm) ||
+                    staff.position.toLowerCase().includes(searchTerm)
+                ))
+            );
+            
+            renderStoreTable(filteredStores);
+            
+            if (filteredStores.length === 0) {
+                showListMessage(`找不到符合「${searchTerm}」的門市或業務`, 'info');
+            } else {
+                showListMessage(`找到 ${filteredStores.length} 個符合「${searchTerm}」的門市`, 'success');
+            }
+        }
+
+        // 顯示門市表單訊息
+        function showFormMessage(message, type) {
+            formAlert.textContent = message;
+            formAlert.className = `alert alert-${type}`;
+            
+            // 3秒後自動隱藏
+            setTimeout(() => {
+                formAlert.classList.add('hidden');
+            }, 3000);
+        }
+
+        // 顯示業務表單訊息
+        function showStaffFormMessage(message, type) {
+            staffFormAlert.textContent = message;
+            staffFormAlert.className = `alert alert-${type}`;
+            
+            // 3秒後自動隱藏
+            setTimeout(() => {
+                staffFormAlert.classList.add('hidden');
+            }, 3000);
+        }
+
+        // 顯示列表訊息
+        function showListMessage(message, type) {
+            listAlert.textContent = message;
+            listAlert.className = `alert alert-${type}`;
+            
+            // 3秒後自動隱藏
+            setTimeout(() => {
+                listAlert.classList.add('hidden');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
